@@ -2,7 +2,7 @@
 
 开发者、信息安全爱好者
 
-博客：[澄澈少年的博客](https://gotojava.cn/)
+博客：[澄澈少年的网络日记](https://gotojava.cn/)
 
 <p align="center">
 <a href="https://gotojava.cn/" target="_blank" rel="noopener noreferrer">
