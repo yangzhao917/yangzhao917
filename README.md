@@ -1,4 +1,5 @@
 # 关于我
+- YouTube: [Zhao Yang](https://www.youtube.com/channel/UCsVCnZ5iDt3bFupVsyXSYqQ)
 
 | 📝 个人简介 | 📊 Github 统计 |
 | :--- | :--- |
