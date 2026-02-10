@@ -1,4 +1,4 @@
-📧 邮箱：[yz0917@foxmail.com](mailto:yz0917@foxmail.com)  
+📧 Email：[yz0917@foxmail.com](mailto:yz0917@foxmail.com)  
 📺 Youtube Channel：[Zhao Yang](https://www.youtube.com/channel/UCsVCnZ5iDt3bFupVsyXSYqQ)  
 🔗 zhihu：[Zhao Yang](https://www.zhihu.com/people/charles-yang-55)  
 🔗 Bonjour Card：[Zhao Yang](https://bonjour.bio/yangzhao)  
