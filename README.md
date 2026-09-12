@@ -50,7 +50,6 @@
 | [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐3 | 在 Intel AI PC（Arc 140V GPU/NPU）上部署运行 Qwen3 的完整方案 | Python |
 | [**SmartBookmark**](https://github.com/yangzhao917/SmartBookmark) ⭐3 | 智能书签管理浏览器扩展，收藏、搜索与跨设备同步 | JavaScript |
 | [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 《红楼梦》数字阅读作品：人物、情节、立体园林与诗文的探索路径 | TypeScript |
-| [**WeFlow**](https://github.com/yangzhao917/WeFlow) | 本地微信聊天记录导出与年度报告应用 | TypeScript |
 | [**Pixelle-Video**](https://github.com/yangzhao917/Pixelle-Video) | 🚀 AI 全自动短视频引擎 | AI Pipeline |
 | [**xhs-cover-skill**](https://github.com/yangzhao917/xhs-cover-skill) | 小红书封面生成器，Claude Code Skill，18 种预设风格 | Claude Skill |
 
