@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="https://cdn.bonjour.bio/cloudstorage/a574973b-e2dd-48db-b1bd-0ed42b4d4ebc?imageView2/2/w/160/q/85/format/webp" width="120" style="border-radius:50%" alt="杨钊"/>
-
 # 杨钊 · Zhao
 
 **软件工程师 · 全栈 / AI 应用**
