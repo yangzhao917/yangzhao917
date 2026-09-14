@@ -97,8 +97,6 @@
 
 <img src="https://github-readme-streak-stats.herokuapp.com/?user=yangzhao917&theme=material-palenight&hide_border=true" alt="GitHub Streak" />
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=yangzhao917&theme=material-palenight&hide_border=true&area=true" alt="Activity Graph" />
-
 </div>
 
 ---
