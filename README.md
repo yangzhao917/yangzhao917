@@ -29,8 +29,7 @@
 - 🏆 **6 次黑客松获奖**，累计奖金逾万元
 - 🚀 以 PM 身份参与组织了**十几场黑客松活动**，覆盖北大、浙大、哈工大等高校
 - 🎯 **去探索黑客松团队 PM** · **十堰黑客松社区发起人**
-- 🍠 小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) · **314** 粉丝，单篇笔记曝光 **84 万**
-
+- 📈 小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) · 单篇笔记曝光 **84 万**，分享 vibe coding 与黑客松实录
 </td>
 <td width="50%" valign="top">
 
