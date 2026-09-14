@@ -33,8 +33,7 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            SUMMARY=$(git diff --stat README.md | tail -1)
-            echo "summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+            git diff README.md > /tmp/readme_diff.patch
           fi
 
       - name: Commit and push
@@ -50,26 +49,61 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          CHANGE_SUMMARY: ${{ steps.diff.outputs.summary }}
         run: |
-          python3 -c "
+          python3 << 'PYEOF'
           import json, os, urllib.request
-          summary = os.environ.get('CHANGE_SUMMARY', 'README updated')
-          body = f'Your GitHub profile README has been automatically updated.\n\nChanges: {summary}\n\nView: https://github.com/yangzhao917'
+
+          diff_text = ""
+          try:
+              with open("/tmp/readme_diff.patch", encoding="utf-8") as f:
+                  diff_text = f.read()
+          except Exception:
+              diff_text = "(diff not available)"
+
+          # Build readable change summary
+          added = [l[1:] for l in diff_text.splitlines() if l.startswith("+") and not l.startswith("+++")]
+          removed = [l[1:] for l in diff_text.splitlines() if l.startswith("-") and not l.startswith("---")]
+
+          sections = []
+          sections.append(f"Added {len(added)} line(s), removed {len(removed)} line(s).")
+
+          if added:
+              sections.append("\n--- Added ---")
+              for line in added[:20]:
+                  sections.append(f"  + {line.strip()}")
+              if len(added) > 20:
+                  sections.append(f"  ... and {len(added) - 20} more lines")
+
+          if removed:
+              sections.append("\n--- Removed ---")
+              for line in removed[:20]:
+                  sections.append(f"  - {line.strip()}")
+              if len(removed) > 20:
+                  sections.append(f"  ... and {len(removed) - 20} more lines")
+
+          body = "\n".join([
+              "Your GitHub profile README has been automatically updated.",
+              "",
+              *sections,
+              "",
+              "View: https://github.com/yangzhao917",
+          ])
+
           payload = json.dumps({
-              'from': 'Notify <onboarding@resend.dev>',
-              'to': 'yz0917@foxmail.com',
-              'subject': 'GitHub Profile README Updated',
-              'text': body
+              "from": "Notify <onboarding@resend.dev>",
+              "to": "yzhao3112@gmail.com",
+              "subject": "GitHub Profile README Updated",
+              "text": body
           }).encode()
+
           req = urllib.request.Request(
-              'https://api.resend.com/emails',
+              "https://api.resend.com/emails",
               data=payload,
               headers={
-                  'Authorization': f\"Bearer {os.environ['RESEND_API_KEY']}\",
-                  'Content-Type': 'application/json'
+                  "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
+                  "Content-Type": "application/json"
               }
           )
           resp = urllib.request.urlopen(req)
-          print(f'Resend response: {resp.status} {resp.read().decode()}')
-          "
+          print(f"Resend response: {resp.status} {resp.read().decode()}")
+          PYEOF
