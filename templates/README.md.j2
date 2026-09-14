@@ -1,30 +1,56 @@
 <div align="center">
 
-# {{ static.name_cn }} · {{ static.name_en }}
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=600&lines=Hi+%F0%9F%91%8B+I'm+{{ static.name_en }};Full-Stack+%2B+AI+Builder;6x+Hackathon+Winner+%F0%9F%8F%86;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
+
+<br/>
 
 **{{ static.title }}**
-{{ static.subtitle }}
 
-📍 {{ static.location }}
+📍 {{ static.location }} · {{ static.subtitle }}
 
 <a href="https://bonjour.bio/yangzhao"><img src="https://img.shields.io/badge/Bonjour%20Card-000000?style=for-the-badge&logo=safari&logoColor=white" alt="Bonjour"/></a>
 <a href="{{ static.xiaohongshu_url }}"><img src="https://img.shields.io/badge/小红书-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white" alt="小红书"/></a>
 <a href="{{ static.bilibili_url }}"><img src="https://img.shields.io/badge/bilibili-00A1D6?style=for-the-badge&logo=bilibili&logoColor=white" alt="bilibili"/></a>
 <a href="mailto:{{ static.email }}"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
 
+<img src="https://komarev.com/ghpvc/?username={{ github_username }}&style=flat-square&color=blueviolet" alt="Profile Views"/>
+
 </div>
 
 ---
 
-## 👋 关于我
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 关于我
 
 {% if xhs and xhs.bio %}- {{ xhs.bio }}
-{% else %}- 🧑‍💻 软件工程师，做全栈开发，也做 AI 应用与 Agent 的落地实践
-{% endif %}- 🚀 **去探索黑客松团队 PM**，**十堰黑客松社区发起人**，常年在各类黑客松里当选手 / 工作人员
-{% if xhs and xhs.follower_count is defined %}- 🍠 小红书 [@杨钊]({{ static.xiaohongshu_url }}) · {{ xhs.follower_count }} 粉丝
-{% else %}- ✍️ 在小红书 [@杨钊]({{ static.xiaohongshu_url }}) 分享 vibe coding、AI 工具与黑客松记录
+{% else %}- 全干工程师，写代码也做产品，目前在探索 AI 应用与 Agent 的落地
+{% endif %}- 🏆 **6 次黑客松获奖**，累计奖金逾万元
+- 🚀 以 PM 身份参与组织了**十几场黑客松活动**，覆盖北大、浙大、哈工大等高校
+- 🎯 **去探索黑客松团队 PM** · **十堰黑客松社区发起人**
+{% if xhs and xhs.follower_count is defined %}- 🍠 小红书 [@杨钊]({{ static.xiaohongshu_url }}) · **{{ xhs.follower_count }}** 粉丝，单篇笔记曝光 **84 万**
+{% else %}- 🍠 小红书 [@杨钊]({{ static.xiaohongshu_url }}) · 分享 vibe coding 与黑客松实录，单篇笔记曝光 **84 万**
 {% endif %}
-## 🛠️ 技术栈
+</td>
+<td width="50%" valign="top">
+
+### 获奖经历
+
+| 赛事 | 奖项 |
+| --- | --- |
+| 2026 数字艺术黑客松 | 最有爱奖 🥇 |
+| 2026 浦软黑客松 | 联想创新专项奖 |
+| 2025 算网杯 AI Agent 大赛 | 三等奖 |
+| 2025 AI×AR 双引擎黑客松 | 未来之星奖 |
+| 2025 Trae Hackathon | 优秀奖 |
+
+</td>
+</tr>
+</table>
+
+## 技术栈
 
 <div align="center">
 
@@ -41,42 +67,45 @@
 
 </div>
 
-## 📦 精选项目
+## 精选项目
 
 | 项目 | 简介 | 技术 |
 | --- | --- | --- |
 {% for repo in repos %}| [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %} | {{ repo.description }} | {{ repo.language or "—" }} |
 {% endfor %}
-{% if awards %}## 🏆 获奖经历
 
-| 时间 | 赛事 | 奖项 |
-| --- | --- | --- |
-{% for a in awards %}| {{ a.year }} | {{ a.event }} | {{ a.prize }} |
-{% endfor %}
-{% endif %}{% if events %}## 🎪 黑客松社区
+## 黑客松社区
 
-作为 PM / 组织者 / 志愿者参与过：
+> 从选手到组织者，我相信黑客松是年轻人最快验证想法的方式。
 
-{% for e in events %}- {{ e }}
-{% endfor %}
-{% endif %}## 📊 GitHub 数据
+{% if events %}{% for e in events %}- {{ e }}
+{% endfor %}{% else %}- 人民日报｜百城千县黑客松 · 普宁专场
+- 模法黑客松 S1 / S4（医保智能体开发专场）
+- AI Hackathon Tour 高校联赛 · 浙大站 / 哈工大站 / 南京站
+- 江苏知识产权人工智能创新大赛
+- IntuitionX 跨年黑客松、杭州环球黑客松、北京 PARTY NIGHTS 人工智能主题日
+- 十堰黑客松社区（发起人）
+{% endif %}
+
+## GitHub 数据
 
 <div align="center">
 
-<img height="165" src="https://{{ static.stats_instance }}/api?username={{ github_username }}&show_icons=true&theme=material-palenight&include_all_commits=true&count_private=true&hide_border=true" alt="GitHub 统计"/>
-<img height="165" src="https://{{ static.stats_instance }}/api/top-langs/?username={{ github_username }}&layout=compact&theme=material-palenight&hide_border=true&langs_count=8" alt="常用语言"/>
+<img height="165" src="https://{{ static.stats_instance }}/api?username={{ github_username }}&show_icons=true&theme=material-palenight&include_all_commits=true&count_private=true&hide_border=true" alt="GitHub Stats"/>
+<img height="165" src="https://{{ static.stats_instance }}/api/top-langs/?username={{ github_username }}&layout=compact&theme=material-palenight&hide_border=true&langs_count=8" alt="Top Languages"/>
+
+<img src="https://github-readme-streak-stats.herokuapp.com/?user={{ github_username }}&theme=material-palenight&hide_border=true" alt="GitHub Streak" />
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username={{ github_username }}&theme=material-palenight&hide_border=true&area=true" alt="Activity Graph" />
 
 </div>
 
-## 📮 找到我
+---
 
 <div align="center">
 
-📧 **Email** · [{{ static.email }}](mailto:{{ static.email }})
-🔗 **数字名片** · [bonjour.bio/yangzhao](https://bonjour.bio/yangzhao)
-🍠 **小红书** · [@杨钊]({{ static.xiaohongshu_url }})
-🎬 **bilibili** · [{{ static.bilibili_name }}]({{ static.bilibili_url }})
+📧 [{{ static.email }}](mailto:{{ static.email }}) · 🔗 [bonjour.bio/yangzhao](https://bonjour.bio/yangzhao) · 🍠 [@杨钊]({{ static.xiaohongshu_url }}) · 🎬 [{{ static.bilibili_name }}]({{ static.bilibili_url }})
 
-<sub>欢迎交流 AI 应用、全栈开发，或者一起去打下一场黑客松 🎯</sub>
+**如果你也热爱 AI 和黑客松，欢迎找我组队 🎯**
 
 </div>
