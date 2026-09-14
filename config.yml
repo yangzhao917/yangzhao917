@@ -1,0 +1,37 @@
+# ============================================================
+# GitHub Profile README auto-update configuration
+# Edit this file to change data sources or display settings.
+# ============================================================
+
+sources:
+  bonjour_url: "https://bonjour.bio/yangzhao"
+  github_username: "yangzhao917"
+  xiaohongshu_profile_url: "https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"
+  socialdatax_base_url: "https://mcp.socialdatax.com"
+
+notification:
+  to_email: "yz0917@foxmail.com"
+  from_name: "Notify"
+  from_email: "onboarding@resend.dev"
+
+excluded_repos:
+  - "ja-netfilter-modified"
+  - "xhs-cover-skill"
+  - "springboot2-adapter-tongweb7-example"
+  - "yangzhao917"
+  - "openai-codex-extract-keys"
+  - "wcdb-key-tool"
+
+max_featured_repos: 6
+
+static:
+  name_cn: "杨钊"
+  name_en: "Zhao"
+  title: "软件工程师 · 全栈 / AI 应用"
+  subtitle: "去探索黑客松团队 PM ｜ 十堰黑客松社区发起人"
+  location: "中国 · 上海 · 浦东新区"
+  xiaohongshu_url: "https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"
+  bilibili_url: "https://space.bilibili.com/392248547"
+  bilibili_name: "是杨钊吖"
+  email: "yz0917@foxmail.com"
+  stats_instance: "github-readme-stats-eight-theta.vercel.app"

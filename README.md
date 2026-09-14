@@ -18,10 +18,9 @@
 
 ## 👋 关于我
 
-- 🧑‍💻 软件工程师，做全栈开发，也做 AI 应用与 Agent 的落地实践
+- 🧑‍💻 全干工程师，做过全栈开发，目前在探索 AI 应用与 Agent 的落地实践
 - 🚀 **去探索黑客松团队 PM**，**十堰黑客松社区发起人**，常年在各类黑客松里当选手 / 工作人员
-- 🏆 拿过 6 个黑客松奖项，也参与组织了十几场活动（高校联赛、人民日报百城千县、模法黑客松等）
-- ✍️ 在小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) 分享 vibe coding、AI 工具与黑客松记录
+- 🍠 小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) · 314 粉丝
 
 ## 🛠️ 技术栈
 
@@ -44,22 +43,11 @@
 
 | 项目 | 简介 | 技术 |
 | --- | --- | --- |
-| [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12 | 微信聊天记录分析工具，Web 端浏览、分组管理与 AI 摘要 / 问答 | Flask · HTML |
-| [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐3 | 在 Intel AI PC（Arc 140V GPU/NPU）上部署运行 Qwen3 的完整方案 | Python |
-| [**SmartBookmark**](https://github.com/yangzhao917/SmartBookmark) ⭐3 | 智能书签管理浏览器扩展，收藏、搜索与跨设备同步 | JavaScript |
-| [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 《红楼梦》数字阅读作品：人物、情节、立体园林与诗文的探索路径 | TypeScript |
+| [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12 | 微信聊天记录分析工具，通过 Flask Web 应用包装 `wechat-cli` 命令行工具，提供聊天记录浏览、分组管理和 AI 摘要/问答功能。 | HTML |
+| [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐3 | 在 Intel AI PC（Intel Arc 140V GPU/NPU）上部署和运行 Qwen3 大语言模型的完整解决方案。 | Python |
+| [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 红楼游园是一件面向普通读者的《红楼梦》数字阅读作品。它把人物、情节、园林空间与诗文放进同一条探索路径：从一位人物或一段故事进入，在可旋转的立体园林中找到地点，再回到相关的文学文本。 | TypeScript |
+| [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1 | 一个Spring Boot学习项目，帮助初学者快速上手Spring Boot开发。 | Java |
 | [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) | 天命牌卡牌游戏 | JavaScript |
-
-
-## 🏆 获奖经历
-
-| 时间 | 赛事 | 奖项 |
-| --- | --- | --- |
-| 2026 | 数字艺术黑客松 | 最有爱奖 🥇 |
-| 2026 | 浦软黑客松 | 联想创新专项奖 |
-| 2025 | 算网杯 AI Agent 大赛（算泥社区） | 三等奖 |
-| 2025 | AI×AR 双引擎黑客松 | 未来之星奖 |
-| 2025 | Trae Hackathon | 优秀奖 |
 
 ## 🎪 黑客松社区
 

@@ -1,0 +1,57 @@
+name: Update Profile README
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at UTC 08:00 (Beijing 16:00)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Run update script
+        id: update
+        run: python scripts/update_readme.py
+        env:
+          SOCIALDATAX_API_KEY: ${{ secrets.SOCIALDATAX_API_KEY }}
+
+      - name: Commit and push if changed
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: auto-update profile README"
+          git push
+
+      - name: Send email via Resend
+        if: steps.update.outputs.changed == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          curl -s -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(python3 -c "
+          import json, sys
+          summary = '''${{ steps.update.outputs.summary }}'''
+          body = f'Your GitHub profile README has been automatically updated.\n\nChanges: {summary}\n\nView: https://github.com/yangzhao917'
+          print(json.dumps({
+              'from': 'Notify <onboarding@resend.dev>',
+              'to': 'yz0917@foxmail.com',
+              'subject': 'GitHub Profile README Updated',
+              'text': body
+          }))
+          ")"
