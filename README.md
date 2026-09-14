@@ -49,7 +49,7 @@
 | [**SmartBookmark**](https://github.com/yangzhao917/SmartBookmark) ⭐3 | 智能书签管理浏览器扩展，收藏、搜索与跨设备同步 | JavaScript |
 | [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 《红楼梦》数字阅读作品：人物、情节、立体园林与诗文的探索路径 | TypeScript |
 | [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) | 天命牌卡牌游戏 | JavaScript |
-| [**xhs-cover-skill**](https://github.com/yangzhao917/xhs-cover-skill) | 小红书封面生成器，Claude Code Skill，18 种预设风格 | Claude Skill |
+
 
 ## 🏆 获奖经历
 
