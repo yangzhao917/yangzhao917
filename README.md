@@ -77,14 +77,12 @@
 - 十堰黑客松社区（发起人）
 
 
-## GitHub 数据
+## GitHub 概览
 
 <div align="center">
 
-<img height="165" src="https://github-readme-stats-eight-theta.vercel.app/api?username=yangzhao917&show_icons=true&theme=material-palenight&include_all_commits=true&count_private=true&hide_border=true" alt="GitHub Stats"/>
+<img height="165" src="https://github-readme-stats-eight-theta.vercel.app/api?username=yangzhao917&show_icons=true&theme=material-palenight&hide_border=true" alt="GitHub statistics"/>
 <img height="165" src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=yangzhao917&layout=compact&theme=material-palenight&hide_border=true&langs_count=8" alt="Top Languages"/>
-
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=yangzhao917&theme=material-palenight&hide_border=true" alt="GitHub Streak" />
 
 </div>
 
