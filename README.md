@@ -6,7 +6,7 @@
 
 **软件工程师 · 全栈 / AI 应用**
 
-📍 中国 · 上海 · 浦东新区 · 去探索黑客松团队 PM ｜ 十堰黑客松社区发起人
+📍 中国 · 上海 · 浦东新区 ｜ PJM@去探索｜Founder@十堰黑客松
 
 <a href="https://bonjour.bio/yangzhao"><img src="https://img.shields.io/badge/Bonjour%20Card-000000?style=for-the-badge&logo=safari&logoColor=white" alt="Bonjour"/></a>
 <a href="https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"><img src="https://img.shields.io/badge/小红书-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white" alt="小红书"/></a>
