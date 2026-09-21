@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/yangzhao917/yangzhao917/main/assets/ai-product-hero.svg" alt="AI Product Builder" width="100%"/>
+<img src="https://raw.githubusercontent.com/yangzhao917/yangzhao917/main/assets/ai-product-hero.gif" alt="AI Product Builder" width="100%"/>
 
 <br/>
 
