@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday at UTC 08:00 (Beijing 16:00)
   workflow_dispatch:
+    inputs:
+      send_test_email:
+        description: Send a test notification even when the README is unchanged
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -45,13 +51,22 @@ jobs:
           git commit -m "chore: auto-update profile README"
           git push
 
-      - name: Send email via Resend
-        if: steps.diff.outputs.changed == 'true'
+      - name: Send email notification
+        if: steps.diff.outputs.changed == 'true' || inputs.send_test_email
         env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_USE_TLS: ${{ secrets.SMTP_USE_TLS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TEST_MODE: ${{ inputs.send_test_email }}
         run: |
           python3 << 'PYEOF'
-          import json, os, urllib.request
+          import json, os, smtplib, ssl, urllib.error, urllib.request
+          from email.message import EmailMessage
 
           diff_text = ""
           try:
@@ -81,18 +96,62 @@ jobs:
               if len(removed) > 20:
                   sections.append(f"  ... and {len(removed) - 20} more lines")
 
+          is_test_email = os.environ.get("EMAIL_TEST_MODE") == "true"
+          headline = (
+              "This is a Resend delivery test for your GitHub profile README workflow."
+              if is_test_email
+              else "Your GitHub profile README has been automatically updated."
+          )
+          subject = (
+              "GitHub Profile README Email Test"
+              if is_test_email
+              else "GitHub Profile README Updated"
+          )
+
           body = "\n".join([
-              "Your GitHub profile README has been automatically updated.",
+              headline,
               "",
               *sections,
               "",
               "View: https://github.com/yangzhao917",
           ])
 
+          smtp_host = os.environ.get("SMTP_HOST", "").strip()
+          smtp_user = os.environ.get("SMTP_USERNAME", "").strip()
+          smtp_password = os.environ.get("SMTP_PASSWORD", "")
+          smtp_from = os.environ.get("SMTP_FROM", "").strip()
+          smtp_to = os.environ.get("SMTP_TO", "").strip()
+
+          # SMTP 走自有固定出口，避免 GitHub Hosted Runner 被 Resend 的 WAF 拦截。
+          if smtp_host:
+              if not all((smtp_user, smtp_password, smtp_from, smtp_to)):
+                  raise RuntimeError("SMTP_HOST 已配置，但 SMTP_USERNAME/SMTP_PASSWORD/SMTP_FROM/SMTP_TO 不完整")
+              port = int(os.environ.get("SMTP_PORT", "587"))
+              use_tls = os.environ.get("SMTP_USE_TLS", "true").lower() != "false"
+              message = EmailMessage()
+              message["From"] = smtp_from
+              message["To"] = smtp_to
+              message["Subject"] = subject
+              message.set_content(body)
+              if use_tls:
+                  with smtplib.SMTP(smtp_host, port, timeout=30) as server:
+                      server.starttls(context=ssl.create_default_context())
+                      server.login(smtp_user, smtp_password)
+                      server.send_message(message)
+              else:
+                  with smtplib.SMTP_SSL(smtp_host, port, timeout=30, context=ssl.create_default_context()) as server:
+                      server.login(smtp_user, smtp_password)
+                      server.send_message(message)
+              print(f"SMTP notification sent via {smtp_host}:{port}")
+              raise SystemExit(0)
+
+          api_key = os.environ.get("RESEND_API_KEY", "")
+          if not api_key:
+              raise RuntimeError("未配置 SMTP_HOST，且 RESEND_API_KEY 为空；无法发送通知")
           payload = json.dumps({
               "from": "Notify <onboarding@resend.dev>",
               "to": "yzhao3112@gmail.com",
-              "subject": "GitHub Profile README Updated",
+              "subject": subject,
               "text": body
           }).encode()
 
@@ -100,10 +159,17 @@ jobs:
               "https://api.resend.com/emails",
               data=payload,
               headers={
-                  "Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
+                  "Authorization": f"Bearer {api_key}",
                   "Content-Type": "application/json"
               }
           )
-          resp = urllib.request.urlopen(req)
+          try:
+              resp = urllib.request.urlopen(req)
+          except urllib.error.HTTPError as error:
+              # 保留服务端诊断信息，但不输出授权请求头或 API 密钥。
+              detail = error.read().decode("utf-8", errors="replace")
+              raise RuntimeError(
+                  f"Resend request failed with HTTP {error.code}: {detail}"
+              ) from error
           print(f"Resend response: {resp.status} {resp.read().decode()}")
           PYEOF
