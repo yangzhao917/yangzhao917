@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=700&lines=Hi+%F0%9F%91%8B+I'm+Zhao;Full-Stack+%2B+AI+Builder;5+Hackathon+Winner+%F0%9F%8F%86;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=600&lines=Hi+%F0%9F%91%8B+I'm+Zhao;Full-Stack+%2B+AI+Builder;6x+Hackathon+Winner+%F0%9F%8F%86;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
 
 <br/>
 
 **软件工程师 · 全栈 / AI 应用**
 
-📍 中国 · 上海 · 浦东新区 ｜ PJM@去探索｜Founder@十堰黑客松
+📍 中国 · 上海 · 浦东新区 · 去探索黑客松团队 PM ｜ 十堰黑客松社区发起人
 
 <a href="https://bonjour.bio/yangzhao"><img src="https://img.shields.io/badge/Bonjour%20Card-000000?style=for-the-badge&logo=safari&logoColor=white" alt="Bonjour"/></a>
 <a href="https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"><img src="https://img.shields.io/badge/小红书-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white" alt="小红书"/></a>
@@ -59,7 +59,7 @@
 | 项目 | 简介 | 技术 |
 | --- | --- | --- |
 | [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12 | 微信聊天记录分析工具，通过 Flask Web 应用包装 `wechat-cli` 命令行工具，提供聊天记录浏览、分组管理和 AI 摘要/问答功能。 | HTML |
-| [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐3 | 在 Intel AI PC（Intel Arc 140V GPU/NPU）上部署和运行 Qwen3 大语言模型的完整解决方案。 | Python |
+| [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐4 | 在 Intel AI PC（Intel Arc 140V GPU/NPU）上部署和运行 Qwen3 大语言模型的完整解决方案。 | Python |
 | [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 红楼游园是一件面向普通读者的《红楼梦》数字阅读作品。它把人物、情节、园林空间与诗文放进同一条探索路径：从一位人物或一段故事进入，在可旋转的立体园林中找到地点，再回到相关的文学文本。 | TypeScript |
 | [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1 | 一个Spring Boot学习项目，帮助初学者快速上手Spring Boot开发。 | Java |
 | [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) | 天命牌卡牌游戏 | JavaScript |
