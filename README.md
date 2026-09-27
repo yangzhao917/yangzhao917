@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=600&lines=Hi+%F0%9F%91%8B+I'm+Zhao;Full-Stack+%2B+AI+Builder;6x+Hackathon+Winner+%F0%9F%8F%86;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=600&lines=Hi+%F0%9F%91%8B+I'm+Zhao;AI+Builder;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
 
 <br/>
 
@@ -21,11 +21,11 @@
 
 ### 关于我
 
-- 🧑‍💻 独立开发者，能从 0 到 1 把想法做成产品，目前在探索 AI 应用与 Agent 落地
-- 🏆 参加过几十场黑客松，拿过 **5 个奖项**，累计奖金逾万元
-- 🚀 去探索黑客松团队 PM，参与组织了十几场黑客松，覆盖南京大学、浙大、哈工大等高校
-- 🎙️ 十堰黑客松社区发起人，希望让更多城市的年轻人也能参与进来
-- ✍️ 在小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) 分享 vibe coding 与黑客松实战，单篇笔记曝光 84 万
+- 🧑‍💻 前后端工程师，现独立开发者，目前在探索 AI 应用与 Agent 落地，主要研究LLM、Agent、交互设计等方向。
+- 🏆 黑客松爱好者，累计参赛奖金超万元
+- 🚀 去探索黑客松团队 PM，参与组织了十几场黑客松，覆盖南京大学、浙大、哈工大等高校；
+- 🎙️ 十堰黑客松社区发起人；
+- ✍️ 在小红书 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) 分享AI学习过程，单篇笔记曝光 84 万
 
 ### 获奖经历
 
