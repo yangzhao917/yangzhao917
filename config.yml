@@ -4,7 +4,7 @@
 # ============================================================
 
 sources:
-  bonjour_url: "https://bonjour.bio/yangzhao"
+  bonjour_url: "https://bonjour.bio/__workflow-test-invalid__"
   github_username: "yangzhao917"
 
 notification:
