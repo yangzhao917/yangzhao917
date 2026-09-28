@@ -6,8 +6,6 @@
 sources:
   bonjour_url: "https://bonjour.bio/yangzhao"
   github_username: "yangzhao917"
-  xiaohongshu_profile_url: "https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"
-  socialdatax_base_url: "https://mcp.socialdatax.com"
 
 notification:
   to_email: "yz0917@foxmail.com"
@@ -24,11 +22,24 @@ excluded_repos:
 
 max_featured_repos: 6
 
+work_values:
+  WeChat-Insight: "让聊天记录变得可检索、可整理，也能直接获得 AI 摘要与问答"
+  petlingo: "让 Intel AI PC 用户更容易在本地运行和使用大模型"
+  honglou-garden: "让读者通过空间探索进入《红楼梦》，把人物、故事与诗文连起来"
+  springboot-learning: "帮助 Java 初学者用完整项目理解 Spring Boot 开发"
+  destiny-cards: "提供一套轻量的天命主题卡牌体验"
+
+service_values:
+  - "把一个模糊的想法，整理成可以被看见、体验和使用的作品"
+  - "把 AI 等新工具放进真实场景，让技术真正对人有用"
+  - "把复杂的内容变成可探索、可理解的数字体验"
+
 static:
   name_cn: "杨钊"
   name_en: "Zhao"
-  title: "软件工程师 · 全栈 / AI 应用"
-  subtitle: "去探索黑客松团队 PM ｜ 十堰黑客松社区发起人"
+  title: "独立开发者 · 把想法做成可用的作品"
+  subtitle: "去探索团队 PM ｜ 关注真实需求，做有用的作品"
+  story: "我是杨钊。我喜欢把还说不清楚的问题，做成可以被看见、体验和使用的作品。"
   location: "中国 · 上海 · 浦东新区"
   xiaohongshu_url: "https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"
   bilibili_url: "https://space.bilibili.com/392248547"

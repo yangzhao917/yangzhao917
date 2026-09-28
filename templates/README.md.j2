@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=600&lines=Hi+%F0%9F%91%8B+I'm+{{ static.name_en }};Full-Stack+%2B+AI+Builder;6x+Hackathon+Winner+%F0%9F%8F%86;Hackathon+Organizer+%26+Community+Builder" alt="Typing SVG" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=C792EA&center=true&vCenter=true&random=false&width=700&lines=Hi+%F0%9F%91%8B+I'm+{{ static.name_en }};Make+Ideas+Useful;Digital+Works;Curious+About+What's+Next" alt="Typing SVG" />
 
 <br/>
 
@@ -19,15 +19,25 @@
 
 ---
 
-### 关于我
+## 关于我
 
-- 🧑‍💻 独立开发者，能从 0 到 1 把想法做成产品，目前在探索 AI 应用与 Agent 落地
-- 🏆 参加过几十场黑客松，拿过 **5 个奖项**，累计奖金逾万元
-- 🚀 去探索黑客松团队 PM，参与组织了十几场黑客松，覆盖南京大学、浙大、哈工大等高校
-- 🎙️ 十堰黑客松社区发起人，希望让更多城市的年轻人也能参与进来
-- ✍️ 在小红书 [@杨钊]({{ static.xiaohongshu_url }}) 分享 vibe coding 与黑客松实战，单篇笔记曝光 84 万
+{{ static.story }}
 
-### 获奖经历
+{% for line in profile_description %}- {{ line }}
+{% endfor %}
+## 作品
+
+> 从一个具体问题出发，把想法做成别人愿意使用的作品。
+
+| 作品 | 对用户的价值 |
+| --- | --- |
+{% for repo in repos %}| [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %} | {{ repo.value }} |
+{% endfor %}
+## 我能提供什么
+
+{% for value in service_values %}- {{ value }}
+{% endfor %}
+## 获奖经历
 
 | 赛事 | 奖项 |
 | --- | --- |
@@ -36,43 +46,6 @@
 | 2025 算网杯 AI Agent 大赛 | 三等奖 |
 | 2025 AI×AR 双引擎黑客松 | 未来之星奖 |
 | 2025 Trae Hackathon | 优秀奖 |
-
-## 技术栈
-
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
-
-</div>
-
-## 精选项目
-
-| 项目 | 简介 | 技术 |
-| --- | --- | --- |
-{% for repo in repos %}| [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %} | {{ repo.description }} | {{ repo.language or "—" }} |
-{% endfor %}
-
-## 黑客松社区
-
-> 从选手到组织者，我相信黑客松是年轻人最快验证想法的方式。
-
-{% if events %}{% for e in events %}- {{ e }}
-{% endfor %}{% else %}- 人民日报｜百城千县黑客松 · 普宁专场
-- 模法黑客松 S1 / S4（医保智能体开发专场）
-- AI Hackathon Tour 高校联赛 · 浙大站 / 哈工大站 / 南京站
-- 江苏知识产权人工智能创新大赛
-- IntuitionX 跨年黑客松、杭州环球黑客松、北京 PARTY NIGHTS 人工智能主题日
-- 十堰黑客松社区（发起人）
-{% endif %}
 
 ## GitHub 概览
 
@@ -89,6 +62,6 @@
 
 📧 [{{ static.email }}](mailto:{{ static.email }}) · 🔗 [bonjour.bio/yangzhao](https://bonjour.bio/yangzhao) · 🍠 [@杨钊]({{ static.xiaohongshu_url }}) · 🎬 [{{ static.bilibili_name }}]({{ static.bilibili_url }})
 
-**如果你也热爱 AI 和黑客松，欢迎找我组队 🎯**
+**去探索，让好奇抵达未知**
 
 </div>

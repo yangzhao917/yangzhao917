@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """Fetch data from multiple sources and regenerate README.md."""
 
-import json
 import os
-import re
 import sys
 from pathlib import Path
 
@@ -25,41 +23,11 @@ def load_config():
         return yaml.safe_load(f)
 
 
-# ── SocialDataX (Xiaohongshu) ────────────────────────────
-
-def fetch_xhs_data(config):
-    api_key = os.environ.get("SOCIALDATAX_API_KEY")
-    if not api_key:
-        print("[WARN] SOCIALDATAX_API_KEY not set, skipping XHS data")
-        return None
-
-    base = config["sources"]["socialdatax_base_url"].rstrip("/")
-    profile_url = config["sources"]["xiaohongshu_profile_url"]
-    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-
-    try:
-        resp = requests.post(
-            f"{base}/socialdatax/api/v1/xhs/user/info",
-            headers=headers,
-            json={"profile_url": profile_url},
-            timeout=30,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        if "code" in data:
-            print(f"[WARN] SocialDataX error: {data.get('message')}")
-            return None
-        return {
-            "bio": data.get("bio", "").split("\n")[0].strip(),
-            "follower_count": data.get("follower_count"),
-            "name": data.get("name", ""),
-        }
-    except Exception as e:
-        print(f"[WARN] SocialDataX request failed: {e}")
-        return None
-
-
 # ── Bonjour.bio ──────────────────────────────────────────
+
+class BonjourFetchError(RuntimeError):
+    """Bonjour 是关于我内容的权威来源，无法安全读取时停止更新。"""
+
 
 def fetch_bonjour_data(config):
     url = config["sources"]["bonjour_url"]
@@ -67,55 +35,37 @@ def fetch_bonjour_data(config):
         resp = requests.get(url, timeout=15)
         resp.raise_for_status()
     except Exception as e:
-        print(f"[WARN] Bonjour fetch failed: {e}")
-        return {"awards": [], "events": []}
+        raise BonjourFetchError(f"Bonjour fetch failed: {e}") from e
 
     soup = BeautifulSoup(resp.text, "html.parser")
-    text = soup.get_text("\n", strip=True)
-
-    awards = parse_awards(text)
-    events = parse_events(text)
-    return {"awards": awards, "events": events}
+    return {"profile_description": parse_profile_description(soup)}
 
 
-def parse_awards(text):
-    awards = []
-    # Match "2026 数字艺术黑客松｜最有爱奖🥇" or "2025 算网杯 AI Agent 大赛 | 三等奖"
-    pattern = r"(20\d{2})\s+(.+?)[｜|]\s*(.+)"
-    for line in text.split("\n"):
-        line = line.strip()
-        m = re.match(pattern, line)
-        if not m:
-            continue
-        year, event, prize = m.group(1), m.group(2).strip(), m.group(3).strip()
-        # Only keep award-like entries, limit prize length to avoid garbage
-        if len(prize) > 50:
-            continue
-        if any(kw in prize for kw in ["奖", "Award", "Prize"]):
-            awards.append({"year": year, "event": event, "prize": prize})
-    return awards
+def parse_profile_description(soup):
+    """读取页面可见的个人简介，不使用被截断的 SEO 元数据。"""
+    node = soup.select_one("[data-profile-bio]")
+    if not node:
+        raise BonjourFetchError("Bonjour profile description is missing")
 
-
-def parse_events(text):
-    # Bonjour page text is too unstructured for reliable parsing.
-    # Use curated list; update config or this list when events change.
-    known_events = [
-        "人民日报｜百城千县黑客松 · 普宁专场",
-        "模法黑客松 S1 / S4（医保智能体开发专场）",
-        "AI Hackathon Tour 高校联赛 · 浙大站 / 哈工大站 / 南京站",
-        "江苏知识产权人工智能创新大赛",
-        "IntuitionX 跨年黑客松、杭州环球黑客松、北京 PARTY NIGHTS 人工智能主题日",
-        "十堰黑客松社区（发起人）",
-    ]
-    return known_events
+    lines = [line.strip() for line in node.get_text("\n").splitlines() if line.strip()]
+    # 这是 Bonjour 的导航提示，不属于个人简介。
+    description = [line for line in lines if line != "社交媒体｜作品案例 看下面👇"]
+    if not description:
+        raise BonjourFetchError("Bonjour profile description is empty")
+    return description
 
 
 # ── GitHub API ───────────────────────────────────────────
 
+class GitHubFetchError(RuntimeError):
+    """GitHub 作品数据无法安全读取时停止更新。"""
+
+
 def fetch_github_repos(config):
     username = config["sources"]["github_username"]
-    excluded = set(config.get("excluded_repos", []))
-    max_repos = config.get("max_featured_repos", 6)
+    excluded = set(config["excluded_repos"])
+    max_repos = config["max_featured_repos"]
+    work_values = config["work_values"]
 
     try:
         resp = requests.get(
@@ -126,39 +76,39 @@ def fetch_github_repos(config):
         resp.raise_for_status()
         all_repos = resp.json()
     except Exception as e:
-        print(f"[WARN] GitHub API failed: {e}")
-        return []
+        raise GitHubFetchError(f"GitHub API failed: {e}") from e
+
+    if not isinstance(all_repos, list):
+        raise GitHubFetchError("GitHub repository response is not a list")
 
     repos = []
     for r in all_repos:
         name = r["name"]
-        if name in excluded or r.get("fork"):
+        if name in excluded or r["fork"]:
             continue
         repos.append({
             "name": name,
-            "description": (r.get("description") or "").replace("|", "\\|")[:100],
-            "stars": r.get("stargazers_count", 0),
-            "language": r.get("language") or "",
+            "stars": r["stargazers_count"],
         })
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
-    return repos[:max_repos]
+    featured_repos = repos[:max_repos]
+    if not featured_repos:
+        raise GitHubFetchError("No eligible GitHub works found")
 
+    for repo in featured_repos:
+        if repo["name"] not in work_values or not work_values[repo["name"]]:
+            raise GitHubFetchError(
+                f"GitHub work {repo['name']} is missing a user value description"
+            )
+        repo["value"] = work_values[repo["name"]]
 
-def is_repo_accessible(username, name):
-    try:
-        resp = requests.get(
-            f"https://api.github.com/repos/{username}/{name}",
-            timeout=10,
-        )
-        return resp.status_code == 200
-    except Exception:
-        return True
+    return featured_repos
 
 
 # ── Render ───────────────────────────────────────────────
 
-def render_readme(config, xhs, bonjour, repos):
+def render_readme(config, bonjour, repos):
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATE_DIR)),
         keep_trailing_newline=True,
@@ -167,9 +117,8 @@ def render_readme(config, xhs, bonjour, repos):
     return template.render(
         static=config["static"],
         github_username=config["sources"]["github_username"],
-        xhs=xhs,
-        awards=bonjour.get("awards", []),
-        events=bonjour.get("events", []),
+        profile_description=bonjour["profile_description"],
+        service_values=config["service_values"],
         repos=repos,
     )
 
@@ -186,7 +135,7 @@ def build_summary(old_text, new_text):
         parts.append(f"{len(added)} lines added")
     if removed:
         parts.append(f"{len(removed)} lines removed")
-    return "; ".join(parts) if parts else "Minor formatting changes"
+    return "; ".join(parts)
 
 
 def set_output(key, value):
@@ -198,17 +147,22 @@ def set_output(key, value):
 def main():
     config = load_config()
 
-    print("Fetching XHS data via SocialDataX...")
-    xhs = fetch_xhs_data(config)
-
     print("Fetching Bonjour.bio data...")
-    bonjour = fetch_bonjour_data(config)
+    try:
+        bonjour = fetch_bonjour_data(config)
+    except BonjourFetchError as exc:
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
 
     print("Fetching GitHub repos...")
-    repos = fetch_github_repos(config)
+    try:
+        repos = fetch_github_repos(config)
+    except GitHubFetchError as exc:
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
 
-    print(f"Rendering README ({len(repos)} repos, {len(bonjour.get('awards', []))} awards)...")
-    new_content = render_readme(config, xhs, bonjour, repos)
+    print(f"Rendering README ({len(repos)} works)...")
+    new_content = render_readme(config, bonjour, repos)
 
     old_content = ""
     if README_PATH.exists():

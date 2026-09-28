@@ -4,12 +4,6 @@ on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday at UTC 08:00 (Beijing 16:00)
   workflow_dispatch:
-    inputs:
-      send_test_email:
-        description: Send a test notification even when the README is unchanged
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: write
@@ -19,18 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        id: checkout
 
       - uses: actions/setup-python@v5
+        id: setup-python
         with:
           python-version: '3.12'
 
       - name: Install dependencies
+        id: install
         run: pip install -r scripts/requirements.txt
 
       - name: Run update script
+        id: update
         run: python scripts/update_readme.py
-        env:
-          SOCIALDATAX_API_KEY: ${{ secrets.SOCIALDATAX_API_KEY }}
 
       - name: Check for changes
         id: diff
@@ -39,20 +35,21 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git diff README.md > /tmp/readme_diff.patch
+            git diff --unified=0 README.md | tee /tmp/readme_diff.patch
           fi
 
       - name: Commit and push
+        id: publish
         if: steps.diff.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git commit -m "chore: auto-update profile README"
+          git commit -m "自动更新个人主页 README"
           git push
 
-      - name: Send email notification
-        if: steps.diff.outputs.changed == 'true' || inputs.send_test_email
+      - name: Send result notification
+        if: ${{ always() && (steps.diff.outputs.changed == 'true' || failure()) }}
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
@@ -61,115 +58,142 @@ jobs:
           SMTP_USE_TLS: ${{ secrets.SMTP_USE_TLS }}
           SMTP_FROM: ${{ secrets.SMTP_FROM }}
           SMTP_TO: ${{ secrets.SMTP_TO }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          EMAIL_TEST_MODE: ${{ inputs.send_test_email }}
+          JOB_STATUS: ${{ job.status }}
+          README_CHANGED: ${{ steps.diff.outputs.changed || 'false' }}
+          CHECKOUT_OUTCOME: ${{ steps.checkout.outcome }}
+          SETUP_OUTCOME: ${{ steps.setup-python.outcome }}
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          UPDATE_OUTCOME: ${{ steps.update.outcome }}
+          DIFF_OUTCOME: ${{ steps.diff.outcome }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+          README_DIFF_PATH: /tmp/readme_diff.patch
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           python3 << 'PYEOF'
-          import json, os, smtplib, ssl, urllib.error, urllib.request
+          import os
+          import smtplib
+          import ssl
           from email.message import EmailMessage
 
-          diff_text = ""
+          status = os.environ.get("JOB_STATUS", "unknown")
+          changed = os.environ.get("README_CHANGED") == "true"
+
+          outcomes = {
+              "准备工作区": os.environ.get("CHECKOUT_OUTCOME"),
+              "准备运行环境": os.environ.get("SETUP_OUTCOME"),
+              "安装更新依赖": os.environ.get("INSTALL_OUTCOME"),
+              "同步个人资料和作品": os.environ.get("UPDATE_OUTCOME"),
+              "确认内容变化": os.environ.get("DIFF_OUTCOME"),
+              "发布到 GitHub": os.environ.get("PUBLISH_OUTCOME"),
+          }
+
+          failed_step = next(
+              (name for name, outcome in outcomes.items() if outcome == "failure"),
+              None,
+          )
+
+          added = []
+          removed = []
+          diff_path = os.environ.get("README_DIFF_PATH", "")
           try:
-              with open("/tmp/readme_diff.patch", encoding="utf-8") as f:
-                  diff_text = f.read()
-          except Exception:
-              diff_text = "(diff not available)"
+              with open(diff_path, encoding="utf-8") as diff_file:
+                  for line in diff_file:
+                      line = line.rstrip()
+                      if line.startswith("+++") or line.startswith("---"):
+                          continue
+                      if line.startswith("+") and line[1:].strip():
+                          added.append(line[1:].strip())
+                      elif line.startswith("-") and line[1:].strip():
+                          removed.append(line[1:].strip())
+          except FileNotFoundError:
+              pass
 
-          # Build readable change summary
-          added = [l[1:] for l in diff_text.splitlines() if l.startswith("+") and not l.startswith("+++")]
-          removed = [l[1:] for l in diff_text.splitlines() if l.startswith("-") and not l.startswith("---")]
+          def content_changes():
+              sections = []
+              if added:
+                  sections.append("新增或更新：")
+                  sections.extend(f"- {line}" for line in added[:20])
+                  if len(added) > 20:
+                      sections.append(f"- 其余 {len(added) - 20} 项请查看运行详情")
+              if removed:
+                  sections.append("移除或替换：")
+                  sections.extend(f"- {line}" for line in removed[:20])
+                  if len(removed) > 20:
+                      sections.append(f"- 其余 {len(removed) - 20} 项请查看运行详情")
+              return sections or ["主页内容有变化，具体差异请查看运行详情。"]
 
-          sections = []
-          sections.append(f"Added {len(added)} line(s), removed {len(removed)} line(s).")
+          if status == "success" and changed:
+              subject = "你的 GitHub 个人主页已更新"
+              headline = "你的 GitHub 个人主页已经完成自动更新。"
+              reason = "Bonjour 的个人信息和 GitHub 作品信息已重新整理并发布。"
+              impact = "访客现在可以看到最新的个人介绍和作品价值。"
+          else:
+              subject = "你的 GitHub 个人主页自动更新异常"
+              headline = "这次个人主页自动更新没有顺利完成。"
+              reason_by_step = {
+                  "准备工作区": "系统没有准备好本次更新所需的工作区。",
+                  "准备运行环境": "系统没有准备好本次更新所需的运行环境。",
+                  "安装更新依赖": "系统没有准备好读取和整理主页内容所需的依赖。",
+                  "同步个人资料和作品": "Bonjour 或 GitHub 的内容读取失败，或者返回的信息不完整。为避免展示错误内容，系统已停止发布。",
+                  "确认内容变化": "系统没有完成对新旧主页内容的核对，因此没有继续发布。",
+                  "发布到 GitHub": "新的主页内容已经生成，但没有成功发布到 GitHub，当前线上内容未确认更新。",
+              }
+              reason = reason_by_step.get(
+                  failed_step,
+                  "自动更新流程在未完成的环节中断，当前线上内容未确认更新。",
+              )
+              impact = "请打开运行详情查看具体原因，确认后再重新运行更新任务。"
 
-          if added:
-              sections.append("\n--- Added ---")
-              for line in added[:20]:
-                  sections.append(f"  + {line.strip()}")
-              if len(added) > 20:
-                  sections.append(f"  ... and {len(added) - 20} more lines")
-
-          if removed:
-              sections.append("\n--- Removed ---")
-              for line in removed[:20]:
-                  sections.append(f"  - {line.strip()}")
-              if len(removed) > 20:
-                  sections.append(f"  ... and {len(removed) - 20} more lines")
-
-          is_test_email = os.environ.get("EMAIL_TEST_MODE") == "true"
-          headline = (
-              "This is a Resend delivery test for your GitHub profile README workflow."
-              if is_test_email
-              else "Your GitHub profile README has been automatically updated."
-          )
-          subject = (
-              "GitHub Profile README Email Test"
-              if is_test_email
-              else "GitHub Profile README Updated"
-          )
-
-          body = "\n".join([
+          lines = [
               headline,
               "",
-              *sections,
+              f"更新结果：{'已更新' if status == 'success' and changed else '未完成'}",
+              f"内容变化：{'有变化' if changed else '未确认有变化'}",
+              f"异常原因：{reason}" if status != "success" else f"更新说明：{reason}",
+              f"对主页的影响：{impact}",
+          ]
+          if changed:
+              lines.extend(["", "本次内容变动：", *content_changes()])
+          lines.extend([
               "",
-              "View: https://github.com/yangzhao917",
+              f"运行分支：{os.environ.get('REF_NAME', 'unknown')}",
+              f"查看运行详情：{os.environ.get('RUN_URL', '')}",
           ])
+          body = "\n".join(lines)
 
           smtp_host = os.environ.get("SMTP_HOST", "").strip()
           smtp_user = os.environ.get("SMTP_USERNAME", "").strip()
           smtp_password = os.environ.get("SMTP_PASSWORD", "")
           smtp_from = os.environ.get("SMTP_FROM", "").strip()
           smtp_to = os.environ.get("SMTP_TO", "").strip()
-
-          # SMTP 走自有固定出口，避免 GitHub Hosted Runner 被 Resend 的 WAF 拦截。
-          if smtp_host:
-              if not all((smtp_user, smtp_password, smtp_from, smtp_to)):
-                  raise RuntimeError("SMTP_HOST 已配置，但 SMTP_USERNAME/SMTP_PASSWORD/SMTP_FROM/SMTP_TO 不完整")
-              port = int(os.environ.get("SMTP_PORT", "587"))
-              use_tls = os.environ.get("SMTP_USE_TLS", "true").lower() != "false"
-              message = EmailMessage()
-              message["From"] = smtp_from
-              message["To"] = smtp_to
-              message["Subject"] = subject
-              message.set_content(body)
-              if use_tls:
-                  with smtplib.SMTP(smtp_host, port, timeout=30) as server:
-                      server.starttls(context=ssl.create_default_context())
-                      server.login(smtp_user, smtp_password)
-                      server.send_message(message)
-              else:
-                  with smtplib.SMTP_SSL(smtp_host, port, timeout=30, context=ssl.create_default_context()) as server:
-                      server.login(smtp_user, smtp_password)
-                      server.send_message(message)
-              print(f"SMTP notification sent via {smtp_host}:{port}")
-              raise SystemExit(0)
-
-          api_key = os.environ.get("RESEND_API_KEY", "")
-          if not api_key:
-              raise RuntimeError("未配置 SMTP_HOST，且 RESEND_API_KEY 为空；无法发送通知")
-          payload = json.dumps({
-              "from": "Notify <onboarding@resend.dev>",
-              "to": "yzhao3112@gmail.com",
-              "subject": subject,
-              "text": body
-          }).encode()
-
-          req = urllib.request.Request(
-              "https://api.resend.com/emails",
-              data=payload,
-              headers={
-                  "Authorization": f"Bearer {api_key}",
-                  "Content-Type": "application/json"
-              }
-          )
-          try:
-              resp = urllib.request.urlopen(req)
-          except urllib.error.HTTPError as error:
-              # 保留服务端诊断信息，但不输出授权请求头或 API 密钥。
-              detail = error.read().decode("utf-8", errors="replace")
+          if not all((smtp_host, smtp_user, smtp_password, smtp_from, smtp_to)):
               raise RuntimeError(
-                  f"Resend request failed with HTTP {error.code}: {detail}"
-              ) from error
-          print(f"Resend response: {resp.status} {resp.read().decode()}")
+                  "需要配置 SMTP_HOST、SMTP_USERNAME、SMTP_PASSWORD、SMTP_FROM 和 SMTP_TO，"
+                  "才能发送 README 更新提醒。"
+              )
+
+          port = int(os.environ.get("SMTP_PORT") or "587")
+          use_tls = (os.environ.get("SMTP_USE_TLS") or "true").lower() != "false"
+          message = EmailMessage()
+          message["From"] = smtp_from
+          message["To"] = smtp_to
+          message["Subject"] = subject
+          message.set_content(body)
+
+          if use_tls:
+              with smtplib.SMTP(smtp_host, port, timeout=30) as server:
+                  server.starttls(context=ssl.create_default_context())
+                  server.login(smtp_user, smtp_password)
+                  server.send_message(message)
+          else:
+              with smtplib.SMTP_SSL(
+                  smtp_host,
+                  port,
+                  timeout=30,
+                  context=ssl.create_default_context(),
+              ) as server:
+                  server.login(smtp_user, smtp_password)
+                  server.send_message(message)
+          print("README result notification sent")
           PYEOF
