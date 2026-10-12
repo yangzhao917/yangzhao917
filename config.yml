@@ -22,6 +22,8 @@ excluded_repos:
 
 max_featured_repos: 6
 
+# 只有在此列出价值文案的作品才会出现在主页作品区；
+# 未列出的仓库会在运行日志中跳过，不会导致自动更新失败。
 work_values:
   WeChat-Insight: "让聊天记录变得可检索、可整理，也能直接获得 AI 摘要与问答"
   petlingo: "让 Intel AI PC 用户更容易在本地运行和使用大模型"

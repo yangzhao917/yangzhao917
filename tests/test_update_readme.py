@@ -25,6 +25,8 @@ class ProfileDescriptionTests(unittest.TestCase):
               🏆 黑客松爱好者；
               <br>
               社交媒体｜作品案例 看下面👇
+              <br>
+              社交媒体｜作品案例｜获奖经历 看下面👇
             </div>
             """,
             "html.parser",
@@ -54,17 +56,34 @@ class GitHubDataTests(unittest.TestCase):
             fetch_github_repos(self.CONFIG)
 
     @patch("update_readme.requests.get")
-    def test_missing_required_work_field_fails_explicitly(self, get):
+    def test_repo_without_value_description_is_skipped(self, get):
         response = Mock()
-        response.json.return_value = [{
-            "name": "missing-value-work",
-            "fork": False,
-            "stargazers_count": 0,
-        }]
+        response.json.return_value = [
+            {"name": "missing-value-work", "fork": False, "stargazers_count": 0},
+            {"name": "unfinished-work", "fork": False, "stargazers_count": 0},
+        ]
+        get.return_value = response
+
+        self.assertEqual(
+            fetch_github_repos(self.CONFIG),
+            [{"name": "unfinished-work", "stars": 0, "value": "帮助用户完成一件事"}],
+        )
+
+    @patch("update_readme.requests.get")
+    def test_no_valued_work_still_fails_explicitly(self, get):
+        response = Mock()
+        response.json.return_value = [
+            {"name": "missing-value-work", "fork": False, "stargazers_count": 0},
+        ]
         get.return_value = response
 
         with self.assertRaises(GitHubFetchError):
-            fetch_github_repos(self.CONFIG)
+            fetch_github_repos({
+                "sources": {"github_username": "yangzhao917"},
+                "excluded_repos": [],
+                "max_featured_repos": 1,
+                "work_values": {},
+            })
 
 if __name__ == "__main__":
     unittest.main()

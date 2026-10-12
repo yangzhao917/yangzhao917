@@ -48,8 +48,9 @@ def parse_profile_description(soup):
         raise BonjourFetchError("Bonjour profile description is missing")
 
     lines = [line.strip() for line in node.get_text("\n").splitlines() if line.strip()]
-    # 这是 Bonjour 的导航提示，不属于个人简介。
-    description = [line for line in lines if line != "社交媒体｜作品案例 看下面👇"]
+    # 导航提示行的文案会随页面改版变化（曾由“作品案例”改为“作品案例｜获奖经历”），
+    # 因此按“看下面”标记识别并剔除，避免把导航提示当成个人简介发布。
+    description = [line for line in lines if "看下面" not in line]
     if not description:
         raise BonjourFetchError("Bonjour profile description is empty")
     return description
@@ -65,7 +66,7 @@ def fetch_github_repos(config):
     username = config["sources"]["github_username"]
     excluded = set(config["excluded_repos"])
     max_repos = config["max_featured_repos"]
-    work_values = config["work_values"]
+    work_values = config.get("work_values") or {}
 
     try:
         resp = requests.get(
@@ -86,22 +87,24 @@ def fetch_github_repos(config):
         name = r["name"]
         if name in excluded or r["fork"]:
             continue
+        value = (work_values.get(name) or "").strip()
+        # work_values 是精选作品的权威来源：只有撰写了价值文案的作品才进入主页。
+        # 新建仓库默认不展示（在日志中可见），避免每次添新仓库都让定时任务失败，
+        # 也避免主页出现没有价值说明的作品。
+        if not value:
+            print(f"[SKIP] {name} 未配置 work_values 价值文案，本次不纳入精选")
+            continue
         repos.append({
             "name": name,
             "stars": r["stargazers_count"],
+            "value": value,
         })
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
     featured_repos = repos[:max_repos]
+    # 一个可用作品都没有时仍然失败：宁可停止更新，也不发布空的作品列表。
     if not featured_repos:
         raise GitHubFetchError("No eligible GitHub works found")
-
-    for repo in featured_repos:
-        if repo["name"] not in work_values or not work_values[repo["name"]]:
-            raise GitHubFetchError(
-                f"GitHub work {repo['name']} is missing a user value description"
-            )
-        repo["value"] = work_values[repo["name"]]
 
     return featured_repos
 
