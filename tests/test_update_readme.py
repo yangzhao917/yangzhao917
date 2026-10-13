@@ -46,8 +46,7 @@ class GitHubDataTests(unittest.TestCase):
     CONFIG = {
         "sources": {"github_username": "yangzhao917"},
         "excluded_repos": [],
-        "max_featured_repos": 1,
-        "work_values": {"unfinished-work": "帮助用户完成一件事"},
+        "max_featured_repos": 2,
     }
 
     @patch("update_readme.requests.get", side_effect=RequestException("offline"))
@@ -56,34 +55,49 @@ class GitHubDataTests(unittest.TestCase):
             fetch_github_repos(self.CONFIG)
 
     @patch("update_readme.requests.get")
-    def test_repo_without_value_description_is_skipped(self, get):
+    def test_features_repos_by_stars_without_extra_config(self, get):
         response = Mock()
         response.json.return_value = [
-            {"name": "missing-value-work", "fork": False, "stargazers_count": 0},
-            {"name": "unfinished-work", "fork": False, "stargazers_count": 0},
+            {"name": "new-work", "fork": False, "stargazers_count": 0},
+            {"name": "popular-work", "fork": False, "stargazers_count": 7},
         ]
         get.return_value = response
 
+        # 新仓库无需任何额外配置即可进入精选，且按 star 数排序。
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
-            [{"name": "unfinished-work", "stars": 0, "value": "帮助用户完成一件事"}],
+            [
+                {"name": "popular-work", "stars": 7},
+                {"name": "new-work", "stars": 0},
+            ],
         )
 
     @patch("update_readme.requests.get")
-    def test_no_valued_work_still_fails_explicitly(self, get):
+    def test_excluded_and_forked_repos_are_filtered(self, get):
         response = Mock()
         response.json.return_value = [
-            {"name": "missing-value-work", "fork": False, "stargazers_count": 0},
+            {"name": "excluded-work", "fork": False, "stargazers_count": 99},
+            {"name": "forked-work", "fork": True, "stargazers_count": 99},
+            {"name": "kept-work", "fork": False, "stargazers_count": 1},
+        ]
+        get.return_value = response
+
+        config = {**self.CONFIG, "excluded_repos": ["excluded-work"]}
+        self.assertEqual(
+            fetch_github_repos(config),
+            [{"name": "kept-work", "stars": 1}],
+        )
+
+    @patch("update_readme.requests.get")
+    def test_no_eligible_work_fails_explicitly(self, get):
+        response = Mock()
+        response.json.return_value = [
+            {"name": "forked-work", "fork": True, "stargazers_count": 99},
         ]
         get.return_value = response
 
         with self.assertRaises(GitHubFetchError):
-            fetch_github_repos({
-                "sources": {"github_username": "yangzhao917"},
-                "excluded_repos": [],
-                "max_featured_repos": 1,
-                "work_values": {},
-            })
+            fetch_github_repos(self.CONFIG)
 
 if __name__ == "__main__":
     unittest.main()

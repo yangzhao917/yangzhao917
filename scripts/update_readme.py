@@ -66,7 +66,6 @@ def fetch_github_repos(config):
     username = config["sources"]["github_username"]
     excluded = set(config["excluded_repos"])
     max_repos = config["max_featured_repos"]
-    work_values = config.get("work_values") or {}
 
     try:
         resp = requests.get(
@@ -87,17 +86,9 @@ def fetch_github_repos(config):
         name = r["name"]
         if name in excluded or r["fork"]:
             continue
-        value = (work_values.get(name) or "").strip()
-        # work_values 是精选作品的权威来源：只有撰写了价值文案的作品才进入主页。
-        # 新建仓库默认不展示（在日志中可见），避免每次添新仓库都让定时任务失败，
-        # 也避免主页出现没有价值说明的作品。
-        if not value:
-            print(f"[SKIP] {name} 未配置 work_values 价值文案，本次不纳入精选")
-            continue
         repos.append({
             "name": name,
             "stars": r["stargazers_count"],
-            "value": value,
         })
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
@@ -121,7 +112,6 @@ def render_readme(config, bonjour, repos):
         static=config["static"],
         github_username=config["sources"]["github_username"],
         profile_description=bonjour["profile_description"],
-        service_values=config["service_values"],
         repos=repos,
     )
 

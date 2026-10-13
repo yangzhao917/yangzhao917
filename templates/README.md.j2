@@ -21,21 +21,11 @@
 
 ## 关于我
 
-{{ static.story }}
-
 {% for line in profile_description %}- {{ line }}
 {% endfor %}
 ## 作品
 
-> 从一个具体问题出发，把想法做成别人愿意使用的作品。
-
-| 作品 | 对用户的价值 |
-| --- | --- |
-{% for repo in repos %}| [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %} | {{ repo.value }} |
-{% endfor %}
-## 我能提供什么
-
-{% for value in service_values %}- {{ value }}
+{% for repo in repos %}- [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %}
 {% endfor %}
 ## 获奖经历
 

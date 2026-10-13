@@ -21,7 +21,6 @@
 
 ## 关于我
 
-我是杨钊。
 - 🧑‍💻 原后端工程师，目前在探索 AI 应用与 Agent 落地，主要研究 LLM、Agent、交互设计等方向；
 - 🏆 黑客松爱好者，累计参赛奖金超万元；
 - 🚀 去探索PM，组织了十几场黑客松，覆盖南京大学、浙大、哈工大等高校；
@@ -30,21 +29,12 @@
 
 ## 作品
 
-> 从一个具体问题出发，把想法做成别人愿意使用的作品。
-
-| 作品 | 对用户的价值 |
-| --- | --- |
-| [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12 | 让聊天记录变得可检索、可整理，也能直接获得 AI 摘要与问答 |
-| [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐4 | 让 Intel AI PC 用户更容易在本地运行和使用大模型 |
-| [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 | 让读者通过空间探索进入《红楼梦》，把人物、故事与诗文连起来 |
-| [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1 | 帮助 Java 初学者用完整项目理解 Spring Boot 开发 |
-| [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) | 提供一套轻量的天命主题卡牌体验 |
-
-## 我能提供什么
-
-- 把一个模糊的想法，整理成可以被看见、体验和使用的作品
-- 把 AI 等新工具放进真实场景，让技术真正对人有用
-- 把复杂的内容变成可探索、可理解的数字体验
+- [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12
+- [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐4
+- [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1
+- [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1
+- [**agent-chat**](https://github.com/yangzhao917/agent-chat)
+- [**yichu-jianqi**](https://github.com/yangzhao917/yichu-jianqi)
 
 ## 获奖经历
 
