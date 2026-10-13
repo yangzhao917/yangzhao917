@@ -27,7 +27,7 @@
 {% endfor %}
 ## 作品
 
-{% for repo in repos %}- [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %}
+{% for repo in repos %}- [**{{ repo.name }}**](https://github.com/{{ github_username }}/{{ repo.name }}){% if repo.stars > 0 %} ⭐{{ repo.stars }}{% endif %}{% if repo.description %} — {{ repo.description }}{% endif %}
 {% endfor %}
 ## 获奖经历
 

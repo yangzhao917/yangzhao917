@@ -81,8 +81,13 @@ def fetch_github_repos(config):
 
     # 作品列表完全来自 GitHub 实时数据，不做人工挑选：fork 不是本人原创作品，
     # 按 API 返回的 fork 标记剔除，其余仓库全部按 star 数排序展示。
+    # 简介同样取自仓库实时描述，未填写描述的仓库只展示名称。
     repos = [
-        {"name": r["name"], "stars": r["stargazers_count"]}
+        {
+            "name": r["name"],
+            "stars": r["stargazers_count"],
+            "description": (r.get("description") or "").strip(),
+        }
         for r in all_repos
         if not r["fork"]
     ]

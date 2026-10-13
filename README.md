@@ -31,17 +31,17 @@
 
 ## 作品
 
-- [**ja-netfilter-modified**](https://github.com/yangzhao917/ja-netfilter-modified) ⭐18
-- [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12
-- [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐4
-- [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1
-- [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1
-- [**yangzhao917**](https://github.com/yangzhao917/yangzhao917)
-- [**agent-chat**](https://github.com/yangzhao917/agent-chat)
+- [**ja-netfilter-modified**](https://github.com/yangzhao917/ja-netfilter-modified) ⭐18 — ja-netfilter是由知了大佬开发的Java代理工具，可用于激活JetBrains系软件。
+- [**WeChat-Insight**](https://github.com/yangzhao917/WeChat-Insight) ⭐12 — 微信聊天记录分析工具，通过 Flask Web 应用包装 `wechat-cli` 命令行工具，提供聊天记录浏览、分组管理和 AI 摘要/问答功能。
+- [**petlingo**](https://github.com/yangzhao917/petlingo) ⭐4 — 在 Intel AI PC（Intel Arc 140V GPU/NPU）上部署和运行 Qwen3 大语言模型的完整解决方案。
+- [**honglou-garden**](https://github.com/yangzhao917/honglou-garden) ⭐1 — 红楼游园是一件面向普通读者的《红楼梦》数字阅读作品。它把人物、情节、园林空间与诗文放进同一条探索路径：从一位人物或一段故事进入，在可旋转的立体园林中找到地点，再回到相关的文学文本。
+- [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) ⭐1 — 一个Spring Boot学习项目，帮助初学者快速上手Spring Boot开发。
+- [**yangzhao917**](https://github.com/yangzhao917/yangzhao917) — 关于我
+- [**agent-chat**](https://github.com/yangzhao917/agent-chat) — 10 个自主人设 Agent 的网页群聊房间：共享聊天记录，自主判断是否发言并选择下一位发言者
 - [**yichu-jianqi**](https://github.com/yangzhao917/yichu-jianqi)
-- [**destiny-cards**](https://github.com/yangzhao917/destiny-cards)
-- [**openai-codex-extract-keys**](https://github.com/yangzhao917/openai-codex-extract-keys)
-- [**springboot2-adapter-tongweb7-example**](https://github.com/yangzhao917/springboot2-adapter-tongweb7-example)
+- [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) — 天命牌卡牌游戏
+- [**openai-codex-extract-keys**](https://github.com/yangzhao917/openai-codex-extract-keys) — OpenAI API Key 提取与验证工具
+- [**springboot2-adapter-tongweb7-example**](https://github.com/yangzhao917/springboot2-adapter-tongweb7-example) — SpringBoot2适配TongWeb7参考示例
 
 ## 获奖经历
 
