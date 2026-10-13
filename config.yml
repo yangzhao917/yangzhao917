@@ -25,6 +25,8 @@ max_featured_repos: 6
 static:
   name_cn: "杨钊"
   name_en: "Zhao"
+  # 仅保留姓名引导句；个人经历以名片（Bonjour）简介为准，不在此重复。
+  story: "我是杨钊。"
   title: "独立开发者 · 把想法做成可用的作品"
   subtitle: "去探索团队 PM ｜ 关注真实需求，做有用的作品"
   location: "中国 · 上海 · 浦东新区"
