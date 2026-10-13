@@ -45,8 +45,6 @@ class ProfileDescriptionTests(unittest.TestCase):
 class GitHubDataTests(unittest.TestCase):
     CONFIG = {
         "sources": {"github_username": "yangzhao917"},
-        "excluded_repos": [],
-        "max_featured_repos": 2,
     }
 
     @patch("update_readme.requests.get", side_effect=RequestException("offline"))
@@ -55,37 +53,37 @@ class GitHubDataTests(unittest.TestCase):
             fetch_github_repos(self.CONFIG)
 
     @patch("update_readme.requests.get")
-    def test_features_repos_by_stars_without_extra_config(self, get):
+    def test_lists_all_live_repos_sorted_by_stars(self, get):
         response = Mock()
         response.json.return_value = [
             {"name": "new-work", "fork": False, "stargazers_count": 0},
             {"name": "popular-work", "fork": False, "stargazers_count": 7},
+            {"name": "another-work", "fork": False, "stargazers_count": 3},
         ]
         get.return_value = response
 
-        # 新仓库无需任何额外配置即可进入精选，且按 star 数排序。
+        # 不做数量上限，也不做人工排除，全部实时仓库按 star 数排序展示。
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
             [
                 {"name": "popular-work", "stars": 7},
+                {"name": "another-work", "stars": 3},
                 {"name": "new-work", "stars": 0},
             ],
         )
 
     @patch("update_readme.requests.get")
-    def test_excluded_and_forked_repos_are_filtered(self, get):
+    def test_forked_repos_are_filtered(self, get):
         response = Mock()
         response.json.return_value = [
-            {"name": "excluded-work", "fork": False, "stargazers_count": 99},
             {"name": "forked-work", "fork": True, "stargazers_count": 99},
-            {"name": "kept-work", "fork": False, "stargazers_count": 1},
+            {"name": "own-work", "fork": False, "stargazers_count": 1},
         ]
         get.return_value = response
 
-        config = {**self.CONFIG, "excluded_repos": ["excluded-work"]}
         self.assertEqual(
-            fetch_github_repos(config),
-            [{"name": "kept-work", "stars": 1}],
+            fetch_github_repos(self.CONFIG),
+            [{"name": "own-work", "stars": 1}],
         )
 
     @patch("update_readme.requests.get")

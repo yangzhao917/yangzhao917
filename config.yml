@@ -12,16 +12,6 @@ notification:
   from_name: "Notify"
   from_email: "onboarding@resend.dev"
 
-excluded_repos:
-  - "ja-netfilter-modified"
-  - "xhs-cover-skill"
-  - "springboot2-adapter-tongweb7-example"
-  - "yangzhao917"
-  - "openai-codex-extract-keys"
-  - "wcdb-key-tool"
-
-max_featured_repos: 6
-
 static:
   name_cn: "杨钊"
   name_en: "Zhao"

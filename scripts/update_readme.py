@@ -64,8 +64,6 @@ class GitHubFetchError(RuntimeError):
 
 def fetch_github_repos(config):
     username = config["sources"]["github_username"]
-    excluded = set(config["excluded_repos"])
-    max_repos = config["max_featured_repos"]
 
     try:
         resp = requests.get(
@@ -81,23 +79,20 @@ def fetch_github_repos(config):
     if not isinstance(all_repos, list):
         raise GitHubFetchError("GitHub repository response is not a list")
 
-    repos = []
-    for r in all_repos:
-        name = r["name"]
-        if name in excluded or r["fork"]:
-            continue
-        repos.append({
-            "name": name,
-            "stars": r["stargazers_count"],
-        })
+    # 作品列表完全来自 GitHub 实时数据，不做人工挑选：fork 不是本人原创作品，
+    # 按 API 返回的 fork 标记剔除，其余仓库全部按 star 数排序展示。
+    repos = [
+        {"name": r["name"], "stars": r["stargazers_count"]}
+        for r in all_repos
+        if not r["fork"]
+    ]
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
-    featured_repos = repos[:max_repos]
     # 一个可用作品都没有时仍然失败：宁可停止更新，也不发布空的作品列表。
-    if not featured_repos:
+    if not repos:
         raise GitHubFetchError("No eligible GitHub works found")
 
-    return featured_repos
+    return repos
 
 
 # ── Render ───────────────────────────────────────────────
