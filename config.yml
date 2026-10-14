@@ -8,6 +8,9 @@ sources:
   github_username: "yangzhao917"
 
 notification:
+  # 邮件提醒开关：当前主页不需要更新通知，先关闭发送，通知代码与 SMTP 接线完整保留，
+  # 需要恢复时改回 true 并确认仓库 SMTP secrets 有效即可。
+  enabled: false
   to_email: "yz0917@foxmail.com"
   from_name: "Notify"
   from_email: "onboarding@resend.dev"

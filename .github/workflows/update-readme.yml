@@ -48,8 +48,20 @@ jobs:
           git commit -m "自动更新个人主页 README"
           git push
 
+      # 邮件提醒开关集中在 config.yml：关闭时跳过发送，通知代码原样保留，改回 true 即可恢复。
+      # 读取不到配置（如 checkout 失败）时按关闭处理，避免误发邮件。
+      - name: Read notification setting
+        id: notify-setting
+        if: ${{ always() }}
+        run: |
+          enabled=false
+          if [ -f config.yml ]; then
+            enabled=$(python3 -c "import yaml; print('true' if (yaml.safe_load(open('config.yml', encoding='utf-8')).get('notification') or {}).get('enabled') else 'false')" || echo false)
+          fi
+          echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
+
       - name: Send result notification
-        if: ${{ always() && (steps.diff.outputs.changed == 'true' || failure()) }}
+        if: ${{ always() && steps.notify-setting.outputs.enabled == 'true' && (steps.diff.outputs.changed == 'true' || failure()) }}
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
