@@ -89,6 +89,42 @@ class GitHubDataTests(unittest.TestCase):
         )
 
     @patch("update_readme.requests.get")
+    def test_disabled_repos_are_filtered(self, get):
+        response = Mock()
+        response.json.return_value = [
+            {"name": "taken-down", "fork": False, "disabled": True, "stargazers_count": 99, "description": "x"},
+            {"name": "own-work", "fork": False, "stargazers_count": 1, "description": "自己的作品"},
+        ]
+        get.return_value = response
+
+        # disabled 是被 GitHub 屏蔽（如 DMCA 下架）的仓库，访客打开只会看到下架通知。
+        self.assertEqual(
+            fetch_github_repos(self.CONFIG),
+            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
+        )
+
+    @patch("update_readme.requests.get")
+    def test_excluded_repos_are_not_showcased(self, get):
+        config = {
+            "sources": {
+                "github_username": "yangzhao917",
+                "exclude_repos": ["dmca-bait"],
+            }
+        }
+        response = Mock()
+        response.json.return_value = [
+            {"name": "dmca-bait", "fork": False, "stargazers_count": 99, "description": "x"},
+            {"name": "own-work", "fork": False, "stargazers_count": 1, "description": "自己的作品"},
+        ]
+        get.return_value = response
+
+        # exclude_repos 点名的仓库即使仍在线上也不再展示，其余不受影响。
+        self.assertEqual(
+            fetch_github_repos(config),
+            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
+        )
+
+    @patch("update_readme.requests.get")
     def test_no_eligible_work_fails_explicitly(self, get):
         response = Mock()
         response.json.return_value = [

@@ -6,6 +6,13 @@
 sources:
   bonjour_url: "https://bonjour.bio/yangzhao"
   github_username: "yangzhao917"
+  # 点名不展示的仓库（与 fork / disabled 过滤无关，仓库本身仍保留）：
+  # 主题落在 DMCA 投诉高发区——微信聊天记录逆向与 OpenAI 密钥批量校验
+  # 都是已有大量下架先例的品类，挂进作品列表等于替投诉方指路，
+  # 因此只从主页移除展示，不动仓库本身。
+  exclude_repos:
+    - WeChat-Insight
+    - openai-codex-extract-keys
 
 notification:
   # 邮件提醒开关：当前主页不需要更新通知，先关闭发送，通知代码与 SMTP 接线完整保留，

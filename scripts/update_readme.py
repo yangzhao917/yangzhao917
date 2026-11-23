@@ -4,6 +4,7 @@
 import os
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 import yaml
@@ -29,8 +30,16 @@ class BonjourFetchError(RuntimeError):
     """Bonjour 是关于我内容的权威来源，无法安全读取时停止更新。"""
 
 
+# 只允许访问登记的官方域名：配置文件若被篡改，脚本不会被当成
+# 向内网或任意地址发请求的跳板（SSRF）。
+ALLOWED_BONJOUR_HOSTS = {"bonjour.bio"}
+
+
 def fetch_bonjour_data(config):
     url = config["sources"]["bonjour_url"]
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in ALLOWED_BONJOUR_HOSTS:
+        raise BonjourFetchError(f"Bonjour URL 不在允许的域名列表中: {url}")
     try:
         resp = requests.get(url, timeout=15)
         resp.raise_for_status()
@@ -64,6 +73,7 @@ class GitHubFetchError(RuntimeError):
 
 def fetch_github_repos(config):
     username = config["sources"]["github_username"]
+    excluded = set(config["sources"].get("exclude_repos") or [])
 
     try:
         resp = requests.get(
@@ -80,7 +90,11 @@ def fetch_github_repos(config):
         raise GitHubFetchError("GitHub repository response is not a list")
 
     # 作品列表完全来自 GitHub 实时数据，不做人工挑选：fork 不是本人原创作品，
-    # 按 API 返回的 fork 标记剔除，其余仓库全部按 star 数排序展示。
+    # 按 API 返回的 fork 标记剔除；disabled 是被 GitHub 屏蔽（如 DMCA 下架）的仓库，
+    # 访客打开只会看到下架通知、统计卡片也会渲染报错，同样不作为作品展示；
+    # exclude_repos 是配置里点名不展示的仓库：仓库本身仍在，但主题落在 DMCA
+    # 投诉高发区（微信记录逆向、OpenAI 密钥批量校验），挂进作品列表只会把
+    # 投诉方引过来，因此只从主页移除、不动仓库；其余仓库全部按 star 数排序展示。
     # 简介同样取自仓库实时描述，未填写描述的仓库只展示名称。
     repos = [
         {
@@ -89,7 +103,7 @@ def fetch_github_repos(config):
             "description": (r.get("description") or "").strip(),
         }
         for r in all_repos
-        if not r["fork"]
+        if not r["fork"] and not r.get("disabled") and r["name"] not in excluded
     ]
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
