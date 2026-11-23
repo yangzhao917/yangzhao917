@@ -6,7 +6,7 @@
 
 **独立开发者 · 把想法做成可用的作品**
 
-📍 中国 · 上海 · 浦东新区 · 去探索团队 PM ｜ 关注真实需求，做有用的作品
+📍 中国 · 上海 · 浦东新区 · 关注真实需求，做有用的作品
 
 <a href="https://bonjour.bio/yangzhao"><img src="https://img.shields.io/badge/Bonjour%20Card-000000?style=for-the-badge&logo=safari&logoColor=white" alt="Bonjour"/></a>
 <a href="https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850"><img src="https://img.shields.io/badge/小红书-FF2442?style=for-the-badge&logo=xiaohongshu&logoColor=white" alt="小红书"/></a>
