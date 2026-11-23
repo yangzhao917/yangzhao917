@@ -68,9 +68,9 @@ class GitHubDataTests(unittest.TestCase):
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
             [
-                {"name": "popular-work", "stars": 7, "description": "热门作品", "language": ""},
-                {"name": "another-work", "stars": 3, "description": "另一个作品", "language": ""},
-                {"name": "new-work", "stars": 0, "description": "", "language": ""},
+                {"name": "popular-work", "stars": 7, "description": "热门作品"},
+                {"name": "another-work", "stars": 3, "description": "另一个作品"},
+                {"name": "new-work", "stars": 0, "description": ""},
             ],
         )
 
@@ -85,7 +85,7 @@ class GitHubDataTests(unittest.TestCase):
 
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
         )
 
     @patch("update_readme.requests.get")
@@ -100,7 +100,7 @@ class GitHubDataTests(unittest.TestCase):
         # disabled 是被 GitHub 屏蔽（如 DMCA 下架）的仓库，访客打开只会看到下架通知。
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
         )
 
     @patch("update_readme.requests.get")
@@ -121,7 +121,7 @@ class GitHubDataTests(unittest.TestCase):
         # exclude_repos 点名的仓库即使仍在线上也不再展示，其余不受影响。
         self.assertEqual(
             fetch_github_repos(config),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
         )
 
     @patch("update_readme.requests.get")
@@ -169,18 +169,18 @@ class RenderTests(unittest.TestCase):
             self.CONFIG,
             {"profile_description": ["🧑‍💻 独立开发者；"]},
             [
-                {"name": "with-desc", "stars": 2, "description": "有简介的作品", "language": "Python"},
-                {"name": "no-desc", "stars": 0, "description": "", "language": ""},
+                {"name": "with-desc", "stars": 2, "description": "有简介的作品"},
+                {"name": "no-desc", "stars": 0, "description": ""},
             ],
         )
 
         self.assertIn(
-            "| [**with-desc**](https://github.com/someone/with-desc) | ⭐2 | Python | 有简介的作品 |",
+            "| [**with-desc**](https://github.com/someone/with-desc) | ⭐2 | 有简介的作品 |",
             output,
         )
-        # 无 Star / 语言 / 简介的仓库用占位符补齐，单元格不留空
+        # 无 Star / 简介的仓库用占位符补齐，单元格不留空
         self.assertIn(
-            "| [**no-desc**](https://github.com/someone/no-desc) | — | — | 暂无描述 |",
+            "| [**no-desc**](https://github.com/someone/no-desc) | — | 暂无描述 |",
             output,
         )
 

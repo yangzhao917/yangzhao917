@@ -102,7 +102,6 @@ def fetch_github_repos(config):
             "stars": r["stargazers_count"],
             # 简介进表格单元格：竖线转义、换行压平，避免撑破表格结构
             "description": (r.get("description") or "").strip().replace("|", "\\|").replace("\n", " "),
-            "language": (r.get("language") or "").strip(),
         }
         for r in all_repos
         if not r["fork"] and not r.get("disabled") and r["name"] not in excluded
