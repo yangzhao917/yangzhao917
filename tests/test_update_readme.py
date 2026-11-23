@@ -68,9 +68,9 @@ class GitHubDataTests(unittest.TestCase):
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
             [
-                {"name": "popular-work", "stars": 7, "description": "热门作品"},
-                {"name": "another-work", "stars": 3, "description": "另一个作品"},
-                {"name": "new-work", "stars": 0, "description": ""},
+                {"name": "popular-work", "stars": 7, "description": "热门作品", "language": ""},
+                {"name": "another-work", "stars": 3, "description": "另一个作品", "language": ""},
+                {"name": "new-work", "stars": 0, "description": "", "language": ""},
             ],
         )
 
@@ -85,7 +85,7 @@ class GitHubDataTests(unittest.TestCase):
 
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
         )
 
     @patch("update_readme.requests.get")
@@ -100,7 +100,7 @@ class GitHubDataTests(unittest.TestCase):
         # disabled 是被 GitHub 屏蔽（如 DMCA 下架）的仓库，访客打开只会看到下架通知。
         self.assertEqual(
             fetch_github_repos(self.CONFIG),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
         )
 
     @patch("update_readme.requests.get")
@@ -121,8 +121,20 @@ class GitHubDataTests(unittest.TestCase):
         # exclude_repos 点名的仓库即使仍在线上也不再展示，其余不受影响。
         self.assertEqual(
             fetch_github_repos(config),
-            [{"name": "own-work", "stars": 1, "description": "自己的作品"}],
+            [{"name": "own-work", "stars": 1, "description": "自己的作品", "language": ""}],
         )
+
+    @patch("update_readme.requests.get")
+    def test_description_pipe_is_escaped_for_table(self, get):
+        response = Mock()
+        response.json.return_value = [
+            {"name": "piped", "fork": False, "stargazers_count": 0, "description": "a | b\nc"},
+        ]
+        get.return_value = response
+
+        # 表格单元格里的竖线会撑破结构，换行也要压平
+        repos = fetch_github_repos(self.CONFIG)
+        self.assertEqual(repos[0]["description"], "a \\| b c")
 
     @patch("update_readme.requests.get")
     def test_no_eligible_work_fails_explicitly(self, get):
@@ -152,18 +164,25 @@ class RenderTests(unittest.TestCase):
         },
     }
 
-    def test_work_without_description_has_no_dangling_separator(self):
+    def test_works_render_as_table_with_placeholders(self):
         output = render_readme(
             self.CONFIG,
             {"profile_description": ["🧑‍💻 独立开发者；"]},
             [
-                {"name": "with-desc", "stars": 2, "description": "有简介的作品"},
-                {"name": "no-desc", "stars": 0, "description": ""},
+                {"name": "with-desc", "stars": 2, "description": "有简介的作品", "language": "Python"},
+                {"name": "no-desc", "stars": 0, "description": "", "language": ""},
             ],
         )
 
-        self.assertIn("- [**with-desc**](https://github.com/someone/with-desc) ⭐2 — 有简介的作品", output)
-        self.assertIn("- [**no-desc**](https://github.com/someone/no-desc)\n", output)
+        self.assertIn(
+            "| [**with-desc**](https://github.com/someone/with-desc) | ⭐2 | Python | 有简介的作品 |",
+            output,
+        )
+        # 无 Star / 语言 / 简介的仓库用占位符补齐，单元格不留空
+        self.assertIn(
+            "| [**no-desc**](https://github.com/someone/no-desc) | — | — | 暂无描述 |",
+            output,
+        )
 
 
 if __name__ == "__main__":
