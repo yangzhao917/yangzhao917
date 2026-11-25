@@ -23,10 +23,9 @@
 
 我是杨钊。
 
-- 🧑‍💻 全栈 / Agent 开发工程师
-- 🚀 去探索构建团队PM / 黑客松组织者
-- 🎙️ 湖北十堰黑客松社区发起人
+- 🚀 去探索构建团队PM
 - 🧑‍💻 多场黑客松大奖获得者
+- 🎙️ 湖北十堰黑客松社区发起人
 
 ## 作品
 
@@ -37,7 +36,6 @@
 | [**springboot-learning**](https://github.com/yangzhao917/springboot-learning) | ⭐1 | 一个Spring Boot学习项目，帮助初学者快速上手Spring Boot开发。 |
 | [**yangzhao917**](https://github.com/yangzhao917/yangzhao917) | — | 关于我 |
 | [**agent-chat**](https://github.com/yangzhao917/agent-chat) | — | 10 个自主人设 Agent 的网页群聊房间：共享聊天记录，自主判断是否发言并选择下一位发言者 |
-| [**yichu-jianqi**](https://github.com/yangzhao917/yichu-jianqi) | — | 暂无描述 |
 | [**destiny-cards**](https://github.com/yangzhao917/destiny-cards) | — | 天命牌卡牌游戏 |
 | [**springboot2-adapter-tongweb7-example**](https://github.com/yangzhao917/springboot2-adapter-tongweb7-example) | — | SpringBoot2适配TongWeb7参考示例 |
 
