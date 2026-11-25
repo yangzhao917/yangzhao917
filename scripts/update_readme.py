@@ -92,6 +92,7 @@ def fetch_github_repos(config):
     # 作品列表完全来自 GitHub 实时数据，不做人工挑选：fork 不是本人原创作品，
     # 按 API 返回的 fork 标记剔除；disabled 是被 GitHub 屏蔽（如 DMCA 下架）的仓库，
     # 访客打开只会看到下架通知、统计卡片也会渲染报错，同样不作为作品展示；
+    # 与用户名同名的仓库是主页本身，不是作品，同样剔除；
     # exclude_repos 是配置里点名不展示的仓库：仓库本身仍在，但主题落在 DMCA
     # 投诉高发区（微信记录逆向、OpenAI 密钥批量校验），挂进作品列表只会把
     # 投诉方引过来，因此只从主页移除、不动仓库；其余仓库全部按 star 数排序展示。
@@ -104,7 +105,7 @@ def fetch_github_repos(config):
             "description": (r.get("description") or "").strip().replace("|", "\\|").replace("\n", " "),
         }
         for r in all_repos
-        if not r["fork"] and not r.get("disabled") and r["name"] not in excluded
+        if not r["fork"] and not r.get("disabled") and r["name"] not in excluded and r["name"] != username
     ]
 
     repos.sort(key=lambda x: x["stars"], reverse=True)
