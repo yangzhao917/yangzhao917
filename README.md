@@ -54,13 +54,3 @@
 <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=yangzhao917&layout=compact&theme=material-palenight&hide_border=true&langs_count=8" alt="Top Languages"/>
 
 </div>
-
----
-
-<div align="center">
-
-📧 [yz0917@foxmail.com](mailto:yz0917@foxmail.com) · 🔗 [bonjour.bio/yangzhao](https://bonjour.bio/yangzhao) · 🍠 [@杨钊](https://www.xiaohongshu.com/user/profile/68f7f32d000000003702f850) · 🎬 [是杨钊吖](https://space.bilibili.com/392248547)
-
-**去探索，让好奇抵达未知**
-
-</div>
